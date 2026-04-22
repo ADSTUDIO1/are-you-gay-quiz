@@ -334,7 +334,23 @@ function showResult(){
         text = "😎 pretty balanced";
     }
 
-    result.innerHTML = text + "<br><br><button onclick='goHome()'>Try Another Quiz</button>";
+    result.innerHTML = `
+        ${text}
+
+        <br><br>
+        <button onclick="goHome()">Try Another Quiz</button>
+
+        <br><br>
+        <p style="font-size:14px; opacity:0.8;">
+            If this made you laugh, consider supporting 👇
+        </p>
+
+        <a href="https://www.paypal.me/YourName/1" target="_blank">
+            <button style="background:#ffc439;color:black;font-weight:bold;">
+                💛 Support this site ($1)
+            </button>
+        </a>
+    `;
 }
 
 </script>
