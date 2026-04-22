@@ -6,72 +6,94 @@
 <title>Quiz Hub ✨</title>
 
 <style>
-html,body{
-margin:0;padding:0;background:#000;height:100%;
-font-family:Arial;color:white;text-align:center;
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+    min-height: 100vh;
 }
 
-body{
-padding:20px;
-background:linear-gradient(-45deg,#ff00cc,#6a00ff,#3333ff,#00c6ff);
-background-size:400% 400%;
-animation:bg 12s infinite;
+body {
+    padding: 20px;
+    background: linear-gradient(-45deg,#ff00cc,#6a00ff,#3333ff,#00c6ff);
+    background-size: 400% 400%;
+    animation: bg 12s infinite;
 }
 
-@keyframes bg{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+@keyframes bg {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
 }
 
-.container{
-width:95%;max-width:700px;margin:auto;
-background:rgba(0,0,0,0.55);
-padding:20px;border-radius:20px;
+.container {
+    width: 95%;
+    max-width: 700px;
+    margin: auto;
+    background: rgba(0,0,0,0.6);
+    padding: 25px;
+    border-radius: 18px;
 }
 
-button{
-display:block;margin:10px auto;padding:14px;
-width:100%;border:none;border-radius:12px;
-font-size:17px;cursor:pointer;
+button {
+    display: block;
+    margin: 12px auto;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    cursor: pointer;
 }
 
-#stats{font-size:14px;margin-bottom:10px;}
-#progress{font-size:14px;margin-bottom:10px;}
+#stats { font-size: 14px; margin-bottom: 10px; }
+#progress { font-size: 14px; margin-bottom: 10px; }
+
+.hidden { display: none; }
 </style>
 </head>
 
 <body>
 
 <div class="container">
-<h1>✨ Quiz Hub ✨</h1>
+
+<!-- MENU -->
+<div id="menu">
+    <h1>✨ Quiz Hub ✨</h1>
+    <p>Pick a quiz 👇</p>
+
+    <button onclick="startQuiz('vibe')">🎭 Vibe Check</button>
+    <button onclick="startQuiz('happy')">😊 Are You Happy?</button>
+</div>
 
 <div id="stats"></div>
 
-<div id="menu">
-<button onclick="startQuiz('vibe')">Are You Gay? (Vibe Check)</button>
-<button onclick="startQuiz('happy')">Are You Happy? 😊</button>
+<!-- QUIZ AREA -->
+<div id="quizSection" class="hidden">
+    <div id="progress"></div>
+    <div id="quiz"></div>
+    <div id="result"></div>
+    <button onclick="goHome()">⬅ Back</button>
 </div>
 
-<div id="progress"></div>
-<div id="quiz"></div>
-<div id="result"></div>
-
-<button id="backBtn" onclick="goHome()" style="display:none;">⬅ Back</button>
 </div>
 
 <script>
 
 // stats
-let users=10000+Math.floor(Math.random()*200);
-let percent=50;
+let totalUsers = 10000 + Math.floor(Math.random()*200);
+let percent = 50;
 
 function updateStats(){
-users+=Math.floor(Math.random()*2);
-document.getElementById("stats").innerHTML=
-"🌍 "+users.toLocaleString()+" people took this quiz<br>✨ "+percent+"% got chaotic results";
+    totalUsers += Math.floor(Math.random()*2);
+    document.getElementById("stats").innerHTML =
+        "🌍 " + totalUsers.toLocaleString() + " people took this quiz<br>" +
+        "✨ " + percent + "% got chaotic results";
 }
-setInterval(updateStats,3000);
+setInterval(updateStats, 3000);
 updateStats();
 
 // QUIZZES
@@ -179,180 +201,140 @@ vibe: [
 {text:"fail",score:0}]}
 ],
 
-// NEW QUIZ (20 QUESTIONS)
 happy: [
-{q:"How often do you feel genuinely happy?",a:[
-{text:"rarely",score:2},
-{text:"sometimes",score:1},
-{text:"often",score:0}]},
+{q:"How often do you feel happy?",a:[
+{text:"rarely",score:2},{text:"sometimes",score:1},{text:"often",score:0}]},
 
-{q:"Do you look forward to your days?",a:[
-{text:"not really",score:2},
-{text:"depends",score:1},
-{text:"yes",score:0}]},
-
-{q:"Your energy levels?",a:[
-{text:"low most of the time",score:2},
-{text:"up and down",score:1},
-{text:"pretty good",score:0}]},
-
-{q:"How often do you laugh?",a:[
-{text:"not much",score:2},
-{text:"sometimes",score:1},
-{text:"a lot",score:0}]},
+{q:"Your energy lately?",a:[
+{text:"low",score:2},{text:"up/down",score:1},{text:"good",score:0}]},
 
 {q:"Sleep quality?",a:[
-{text:"bad",score:2},
-{text:"okay",score:1},
-{text:"good",score:0}]},
+{text:"bad",score:2},{text:"ok",score:1},{text:"good",score:0}]},
 
-{q:"Motivation to do things?",a:[
-{text:"very low",score:2},
-{text:"mixed",score:1},
-{text:"high",score:0}]},
+{q:"Motivation?",a:[
+{text:"none",score:2},{text:"some",score:1},{text:"high",score:0}]},
 
-{q:"How do you feel about your future?",a:[
-{text:"worried",score:2},
-{text:"unsure",score:1},
-{text:"hopeful",score:0}]},
+{q:"Future feeling?",a:[
+{text:"worried",score:2},{text:"unsure",score:1},{text:"hopeful",score:0}]},
 
-{q:"Do you enjoy things you used to?",a:[
-{text:"not really",score:2},
-{text:"sometimes",score:1},
-{text:"yes",score:0}]},
+{q:"How often do you laugh?",a:[
+{text:"rarely",score:2},{text:"sometimes",score:1},{text:"often",score:0}]},
 
-{q:"How stressed are you?",a:[
-{text:"very",score:2},
-{text:"moderate",score:1},
-{text:"not much",score:0}]},
+{q:"Stress level?",a:[
+{text:"high",score:2},{text:"medium",score:1},{text:"low",score:0}]},
 
-{q:"Social energy?",a:[
-{text:"drained quickly",score:2},
-{text:"depends",score:1},
-{text:"fine",score:0}]},
+{q:"Do you enjoy free time?",a:[
+{text:"not really",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
 
-{q:"Do you feel satisfied with life?",a:[
-{text:"not really",score:2},
-{text:"somewhat",score:1},
-{text:"yes",score:0}]},
-
-{q:"How often do you relax?",a:[
-{text:"rarely",score:2},
-{text:"sometimes",score:1},
-{text:"often",score:0}]},
-
-{q:"Do small things make you happy?",a:[
-{text:"not really",score:2},
-{text:"sometimes",score:1},
-{text:"yes",score:0}]},
-
-{q:"Do you feel overwhelmed?",a:[
-{text:"often",score:2},
-{text:"sometimes",score:1},
-{text:"rarely",score:0}]},
-
-{q:"Focus level?",a:[
-{text:"poor",score:2},
-{text:"okay",score:1},
-{text:"good",score:0}]},
-
-{q:"How often do you feel calm?",a:[
-{text:"rarely",score:2},
-{text:"sometimes",score:1},
-{text:"often",score:0}]},
-
-{q:"Do you enjoy your free time?",a:[
-{text:"not much",score:2},
-{text:"sometimes",score:1},
-{text:"yes",score:0}]},
+{q:"Focus?",a:[
+{text:"bad",score:2},{text:"ok",score:1},{text:"good",score:0}]},
 
 {q:"How do you feel right now?",a:[
-{text:"not great",score:2},
-{text:"meh",score:1},
-{text:"good",score:0}]},
+{text:"not great",score:2},{text:"meh",score:1},{text:"good",score:0}]},
+
+{q:"Do you feel calm?",a:[
+{text:"rarely",score:2},{text:"sometimes",score:1},{text:"often",score:0}]},
+
+{q:"Do you enjoy your days?",a:[
+{text:"not really",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
+
+{q:"Do small things make you happy?",a:[
+{text:"rarely",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
+
+{q:"Do you feel overwhelmed?",a:[
+{text:"often",score:2},{text:"sometimes",score:1},{text:"rarely",score:0}]},
 
 {q:"Do you feel connected to others?",a:[
-{text:"not really",score:2},
-{text:"somewhat",score:1},
-{text:"yes",score:0}]},
+{text:"not really",score:2},{text:"somewhat",score:1},{text:"yes",score:0}]},
+
+{q:"Are you satisfied with life?",a:[
+{text:"no",score:2},{text:"kind of",score:1},{text:"yes",score:0}]},
+
+{q:"Do you relax enough?",a:[
+{text:"no",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
+
+{q:"Do you feel positive?",a:[
+{text:"rarely",score:2},{text:"sometimes",score:1},{text:"often",score:0}]},
+
+{q:"Do you enjoy being around people?",a:[
+{text:"no",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
 
 {q:"Final question: are you happy?",a:[
-{text:"no",score:2},
-{text:"unsure",score:1},
-{text:"yes",score:0}]}
+{text:"no",score:2},{text:"unsure",score:1},{text:"yes",score:0}]}
 ]
 
 };
 
-let currentQuiz=null;
-let index=0;
-let score=0;
+// logic
+let currentQuiz = [];
+let current = 0;
+let score = 0;
 
 function startQuiz(type){
-currentQuiz=quizzes[type];
-index=0;
-score=0;
+    currentQuiz = quizzes[type];
+    current = 0;
+    score = 0;
 
-document.getElementById("menu").style.display="none";
-document.getElementById("backBtn").style.display="block";
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("quizSection").classList.remove("hidden");
 
-loadQuestion();
-}
-
-function loadQuestion(){
-let quiz=document.getElementById("quiz");
-let progress=document.getElementById("progress");
-
-if(index>=currentQuiz.length){
-showResult();
-return;
-}
-
-progress.innerHTML=`Question ${index+1}/${currentQuiz.length}`;
-quiz.innerHTML="<h2>"+currentQuiz[index].q+"</h2>";
-
-currentQuiz[index].a.forEach(ans=>{
-let btn=document.createElement("button");
-btn.innerText=ans.text;
-
-btn.onclick=()=>{
-quiz.innerHTML="<h3>analyzing...</h3>";
-setTimeout(()=>{
-score+=ans.score;
-index++;
-loadQuestion();
-},700);
-};
-
-quiz.appendChild(btn);
-});
-}
-
-function showResult(){
-let result=document.getElementById("result");
-let quiz=document.getElementById("quiz");
-
-quiz.innerHTML="";
-
-let text="";
-
-if(score>currentQuiz.length*1.5){
-text="⚠️ you might need more rest & support";
-}else if(score>currentQuiz.length*0.8){
-text="🤔 mixed feelings detected";
-}else{
-text="😊 you seem pretty happy overall";
-}
-
-result.innerHTML=text+"<br><br><button onclick='goHome()'>Back</button>";
+    loadQuestion();
 }
 
 function goHome(){
-document.getElementById("menu").style.display="block";
-document.getElementById("quiz").innerHTML="";
-document.getElementById("result").innerHTML="";
-document.getElementById("progress").innerHTML="";
-document.getElementById("backBtn").style.display="none";
+    document.getElementById("menu").classList.remove("hidden");
+    document.getElementById("quizSection").classList.add("hidden");
+    document.getElementById("quiz").innerHTML = "";
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("progress").innerHTML = "";
+}
+
+function loadQuestion(){
+    const quiz = document.getElementById("quiz");
+    const progress = document.getElementById("progress");
+
+    if(current >= currentQuiz.length){
+        showResult();
+        return;
+    }
+
+    progress.innerHTML = `Question ${current+1}/${currentQuiz.length}`;
+    quiz.innerHTML = "<h2>" + currentQuiz[current].q + "</h2>";
+
+    currentQuiz[current].a.forEach(ans=>{
+        let btn = document.createElement("button");
+        btn.innerText = ans.text;
+
+        btn.onclick = ()=>{
+            quiz.innerHTML = "<h3>Analyzing...</h3>";
+            setTimeout(()=>{
+                score += ans.score;
+                current++;
+                loadQuestion();
+            }, 600);
+        };
+
+        quiz.appendChild(btn);
+    });
+}
+
+function showResult(){
+    const quiz = document.getElementById("quiz");
+    const result = document.getElementById("result");
+
+    quiz.innerHTML = "";
+
+    let text = "";
+
+    if(score >= currentQuiz.length * 1.5){
+        text = "🤔 strong results detected";
+    } else if(score >= currentQuiz.length * 0.8){
+        text = "😐 mixed vibes";
+    } else {
+        text = "😎 pretty balanced";
+    }
+
+    result.innerHTML = text + "<br><br><button onclick='goHome()'>Try Another Quiz</button>";
 }
 
 </script>
