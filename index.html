@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Are You Gay? 🤨✨</title>
+<style>
+*{
+    box-sizing:border-box;
+}
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    color:white;
+    text-align:center;
+    min-height:100vh;
+    overflow-x:hidden;
+    background:linear-gradient(-45deg,#ff00cc,#6a00ff,#3333ff,#00c6ff);
+    background-size:400% 400%;
+    animation:bgMove 12s ease infinite;
+    padding:30px;
+}
+@keyframes bgMove{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+.bubble{
+    position:fixed;
+    border-radius:50%;
+    background:rgba(255,255,255,0.08);
+    animation:float 10s linear infinite;
+    pointer-events:none;
+}
+@keyframes float{
+    from{transform:translateY(100vh)}
+    to{transform:translateY(-120px)}
+}
+.container{
+    max-width:700px;
+    margin:auto;
+    background:rgba(0,0,0,0.55);
+    padding:30px;
+    border-radius:20px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 0 30px rgba(255,255,255,0.15);
+}
+button{
+    display:block;
+    margin:12px auto;
+    padding:14px;
+    width:85%;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-size:16px;
+    transition:0.2s;
+}
+button:hover{
+    transform:scale(1.04);
+}
+button.clicked{
+    transform:scale(0.95);
+}
+#stats{
+    font-size:15px;
+    margin-bottom:18px;
+}
+#quiz{
+    min-height:260px;
+    transition:0.4s;
+}
+.fade{
+    opacity:0;
+}
+.show{
+    opacity:1;
+}
+#progress{
+    margin-top:10px;
+    font-size:14px;
+    opacity:0.85;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>✨ Are You Gay? ✨</h1>
+    <p>(scientifically made up for entertainment purposes)</p>
+
+    <div id="stats"></div>
+    <div id="progress"></div>
+    <div id="quiz" class="show"></div>
+    <div id="result"></div>
+</div>
+
+<script>
+// floating background bubbles
+for(let i=0;i<15;i++){
+    let b=document.createElement("div");
+    b.className="bubble";
+    let size=Math.random()*80+30;
+    b.style.width=size+"px";
+    b.style.height=size+"px";
+    b.style.left=Math.random()*100+"vw";
+    b.style.animationDuration=(Math.random()*8+8)+"s";
+    document.body.appendChild(b);
+}
+
+const questions = [
+{q:"You hear a new song drop. First reaction?",a:[
+{text:"adding it to the crying playlist instantly",score:2},
+{text:"cool beat tbh",score:1},
+{text:"music is just background noise",score:0}]},
+
+{q:"How many selfies are currently in your camera roll?",a:[
+{text:"unholy amount",score:2},
+{text:"a decent few",score:1},
+{text:"none, I'm a cryptid",score:0}]},
+
+{q:"Pick your dream outfit:",a:[
+{text:"layered aesthetic masterpiece",score:2},
+{text:"hoodie + jeans forever",score:1},
+{text:"whatever survived laundry day",score:0}]},
+
+{q:"Someone says 'slay'. Your response?",a:[
+{text:"PERIODDDD",score:2},
+{text:"nice",score:1},
+{text:"what year is it",score:0}]},
+
+{q:"Be honest, your Spotify Wrapped is:",a:[
+{text:"emotionally concerning",score:2},
+{text:"normal enough",score:1},
+{text:"I don't use Spotify",score:0}]},
+
+{q:"Your favorite lighting for selfies?",a:[
+{text:"golden hour obviously",score:2},
+{text:"bathroom mirror",score:1},
+{text:"flashbang mode",score:0}]},
+
+{q:"Pick a social media app:",a:[
+{text:"TikTok",score:2},
+{text:"Instagram",score:1},
+{text:"Discord",score:0}]},
+
+{q:"Your room vibe?",a:[
+{text:"LED lights + cozy chaos",score:2},
+{text:"clean enough",score:1},
+{text:"post-apocalyptic",score:0}]},
+
+{q:"How dramatic are you over text?",a:[
+{text:"full paragraph mode",score:2},
+{text:"short replies",score:1},
+{text:"k",score:0}]},
+
+{q:"Favorite emoji?",a:[
+{text:"✨",score:2},
+{text:"😂",score:1},
+{text:"none",score:0}]},
+
+{q:"What's your go-to compliment?",a:[
+{text:"omg you're literally stunning",score:2},
+{text:"you look nice",score:1},
+{text:"cool",score:0}]},
+
+{q:"Your fashion Pinterest board?",a:[
+{text:"exists and thriving",score:2},
+{text:"maybe a few saved posts",score:1},
+{text:"what's Pinterest",score:0}]},
+
+{q:"How often do you say 'bro'?",a:[
+{text:"ironically",score:2},
+{text:"sometimes",score:1},
+{text:"every sentence",score:0}]},
+
+{q:"How do you sit in a chair?",a:[
+{text:"absolutely not normally",score:2},
+{text:"slightly weird",score:1},
+{text:"like a human",score:0}]},
+
+{q:"Celebrity crush situation?",a:[
+{text:"complicated",score:2},
+{text:"normal",score:1},
+{text:"none",score:0}]},
+
+{q:"Favorite kind of movie?",a:[
+{text:"romance / drama",score:2},
+{text:"comedy",score:1},
+{text:"explosions only",score:0}]},
+
+{q:"How much do aesthetics matter?",a:[
+{text:"literally everything",score:2},
+{text:"somewhat",score:1},
+{text:"zero",score:0}]},
+
+{q:"What's your texting style?",a:[
+{text:"too many emojis",score:2},
+{text:"balanced",score:1},
+{text:"dry as desert",score:0}]},
+
+{q:"How often do you say 'iconic'?",a:[
+{text:"daily",score:2},
+{text:"rarely",score:1},
+{text:"never",score:0}]},
+
+{q:"Final question: be honest... do you pass the vibe check?",a:[
+{text:"absolutely",score:2},
+{text:"maybe",score:1},
+{text:"no clue",score:0}]}
+];
+
+let current=0;
+let score=0;
+
+let totalUsers=10000 + Math.floor(Math.random()*300);
+let percent=48;
+
+function updateStats(){
+    totalUsers += Math.floor(Math.random()*2);
+    document.getElementById("stats").innerHTML=
+        "🌍 "+totalUsers.toLocaleString()+" people took this quiz<br>"+
+        "🌈 "+percent+"% got certified";
+}
+setInterval(updateStats,3000);
+updateStats();
+
+function loadQuestion(){
+    const quiz=document.getElementById("quiz");
+    const progress=document.getElementById("progress");
+
+    if(current>=questions.length){
+        showResult();
+        return;
+    }
+
+    progress.innerHTML=`Question ${current+1} / ${questions.length}`;
+
+    quiz.classList.add("fade");
+
+    setTimeout(()=>{
+        let q=questions[current];
+        quiz.innerHTML="<h2>"+q.q+"</h2>";
+
+        q.a.forEach(ans=>{
+            let btn=document.createElement("button");
+            btn.innerText=ans.text;
+
+            btn.onclick=()=>{
+                btn.classList.add("clicked");
+
+                setTimeout(()=>{
+                    quiz.innerHTML="<h3>🧠 analyzing your vibe...</h3>";
+                    setTimeout(()=>{
+                        score+=ans.score;
+                        current++;
+                        loadQuestion();
+                    },900);
+                },150);
+            };
+
+            quiz.appendChild(btn);
+        });
+
+        quiz.classList.remove("fade");
+    },300);
+}
+
+function showResult(){
+    let result=document.getElementById("result");
+    let quiz=document.getElementById("quiz");
+    let text="";
+
+    quiz.innerHTML="";
+
+    if(score>=30){
+        text="🌈 Certified Vibe Legend 🌈<br>bro... the aura is undeniable";
+        percent=Math.min(99,percent+1);
+    }else if(score>=18){
+        text="🤨 Suspiciously Stylish 🤨<br>the evidence is stacking up";
+    }else{
+        text="😎 just vibing 😎<br>honestly who even knows anymore";
+    }
+
+    result.innerHTML=text+"<br><br><button onclick='location.reload()'>Take Again</button>";
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
