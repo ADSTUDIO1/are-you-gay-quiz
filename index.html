@@ -2,132 +2,90 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<!-- MOBILE FIX -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Are You Gay? 🤨✨</title>
+<title>Quiz Hub ✨</title>
 
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    background: #000;
-    height: 100%;
+html,body{
+margin:0;padding:0;background:#000;height:100%;
+font-family:Arial;color:white;text-align:center;
 }
 
 body{
-    font-family: Arial, sans-serif;
-    color: white;
-    text-align: center;
-    min-height: 100vh;
-    overflow-x: hidden;
-    padding: 20px;
-
-    background: linear-gradient(-45deg,#ff00cc,#6a00ff,#3333ff,#00c6ff);
-    background-size: 400% 400%;
-    animation: bgMove 12s ease infinite;
+padding:20px;
+background:linear-gradient(-45deg,#ff00cc,#6a00ff,#3333ff,#00c6ff);
+background-size:400% 400%;
+animation:bg 12s infinite;
 }
 
-@keyframes bgMove{
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
-}
-
-/* floating bubbles */
-.bubble{
-    position: fixed;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-    animation: float linear infinite;
-    pointer-events: none;
-}
-
-@keyframes float{
-    from{transform:translateY(100vh)}
-    to{transform:translateY(-120px)}
+@keyframes bg{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
 .container{
-    width: 95%;
-    max-width: 700px;
-    margin: auto;
-    background: rgba(0,0,0,0.55);
-    padding: 20px;
-    border-radius: 20px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 0 30px rgba(255,255,255,0.15);
+width:95%;max-width:700px;margin:auto;
+background:rgba(0,0,0,0.55);
+padding:20px;border-radius:20px;
 }
-
-h1{font-size:28px;}
-h2{font-size:20px;}
 
 button{
-    display:block;
-    margin:12px auto;
-    padding:16px;
-    width:100%;
-    border:none;
-    border-radius:14px;
-    cursor:pointer;
-    font-size:18px;
-    min-height:50px;
-    transition:0.2s;
+display:block;margin:10px auto;padding:14px;
+width:100%;border:none;border-radius:12px;
+font-size:17px;cursor:pointer;
 }
 
-button:hover{ transform:scale(1.04); }
-button.clicked{ transform:scale(0.95); }
-
-#stats{ font-size:14px; margin-bottom:15px; }
-#progress{ font-size:14px; margin-bottom:10px; opacity:0.85; }
-
-.fade{ opacity:0; transition:0.3s; }
-.show{ opacity:1; }
-
-/* mobile tweaks */
-@media (max-width:600px){
-    h1{font-size:24px;}
-    h2{font-size:18px;}
-}
+#stats{font-size:14px;margin-bottom:10px;}
+#progress{font-size:14px;margin-bottom:10px;}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-    <h1>✨ Are You Gay? ✨</h1>
-    <p>(100% scientifically questionable)</p>
+<h1>✨ Quiz Hub ✨</h1>
 
-    <div id="stats"></div>
-    <div id="progress"></div>
-    <div id="quiz" class="show"></div>
-    <div id="result"></div>
+<div id="stats"></div>
+
+<div id="menu">
+<button onclick="startQuiz('vibe')">Are You Gay? (Vibe Check)</button>
+<button onclick="startQuiz('happy')">Are You Happy? 😊</button>
+</div>
+
+<div id="progress"></div>
+<div id="quiz"></div>
+<div id="result"></div>
+
+<button id="backBtn" onclick="goHome()" style="display:none;">⬅ Back</button>
 </div>
 
 <script>
-// bubbles
-for(let i=0;i<15;i++){
-    let b=document.createElement("div");
-    b.className="bubble";
-    let size=Math.random()*80+30;
-    b.style.width=size+"px";
-    b.style.height=size+"px";
-    b.style.left=Math.random()*100+"vw";
-    b.style.animationDuration=(Math.random()*8+8)+"s";
-    document.body.appendChild(b);
-}
 
-// QUESTIONS (20)
-const questions = [
-{q:"You hear a new song. Reaction?",a:[
+// stats
+let users=10000+Math.floor(Math.random()*200);
+let percent=50;
+
+function updateStats(){
+users+=Math.floor(Math.random()*2);
+document.getElementById("stats").innerHTML=
+"🌍 "+users.toLocaleString()+" people took this quiz<br>✨ "+percent+"% got chaotic results";
+}
+setInterval(updateStats,3000);
+updateStats();
+
+// QUIZZES
+const quizzes = {
+
+vibe: [
+{q:"You hear a new song?",a:[
 {text:"added to crying playlist instantly",score:2},
-{text:"nice beat",score:1},
+{text:"cool beat",score:1},
 {text:"skip",score:0}]},
 
-{q:"Your camera roll?",a:[
-{text:"too many selfies",score:2},
-{text:"normal amount",score:1},
+{q:"Camera roll?",a:[
+{text:"selfies everywhere",score:2},
+{text:"normal",score:1},
 {text:"none",score:0}]},
 
 {q:"Outfit vibe?",a:[
@@ -215,90 +173,188 @@ const questions = [
 {text:"rarely",score:1},
 {text:"never",score:0}]},
 
-{q:"Final: vibe check?",a:[
+{q:"Final vibe check?",a:[
 {text:"pass",score:2},
 {text:"maybe",score:1},
 {text:"fail",score:0}]}
-];
+],
 
-let current=0;
+// NEW QUIZ (20 QUESTIONS)
+happy: [
+{q:"How often do you feel genuinely happy?",a:[
+{text:"rarely",score:2},
+{text:"sometimes",score:1},
+{text:"often",score:0}]},
+
+{q:"Do you look forward to your days?",a:[
+{text:"not really",score:2},
+{text:"depends",score:1},
+{text:"yes",score:0}]},
+
+{q:"Your energy levels?",a:[
+{text:"low most of the time",score:2},
+{text:"up and down",score:1},
+{text:"pretty good",score:0}]},
+
+{q:"How often do you laugh?",a:[
+{text:"not much",score:2},
+{text:"sometimes",score:1},
+{text:"a lot",score:0}]},
+
+{q:"Sleep quality?",a:[
+{text:"bad",score:2},
+{text:"okay",score:1},
+{text:"good",score:0}]},
+
+{q:"Motivation to do things?",a:[
+{text:"very low",score:2},
+{text:"mixed",score:1},
+{text:"high",score:0}]},
+
+{q:"How do you feel about your future?",a:[
+{text:"worried",score:2},
+{text:"unsure",score:1},
+{text:"hopeful",score:0}]},
+
+{q:"Do you enjoy things you used to?",a:[
+{text:"not really",score:2},
+{text:"sometimes",score:1},
+{text:"yes",score:0}]},
+
+{q:"How stressed are you?",a:[
+{text:"very",score:2},
+{text:"moderate",score:1},
+{text:"not much",score:0}]},
+
+{q:"Social energy?",a:[
+{text:"drained quickly",score:2},
+{text:"depends",score:1},
+{text:"fine",score:0}]},
+
+{q:"Do you feel satisfied with life?",a:[
+{text:"not really",score:2},
+{text:"somewhat",score:1},
+{text:"yes",score:0}]},
+
+{q:"How often do you relax?",a:[
+{text:"rarely",score:2},
+{text:"sometimes",score:1},
+{text:"often",score:0}]},
+
+{q:"Do small things make you happy?",a:[
+{text:"not really",score:2},
+{text:"sometimes",score:1},
+{text:"yes",score:0}]},
+
+{q:"Do you feel overwhelmed?",a:[
+{text:"often",score:2},
+{text:"sometimes",score:1},
+{text:"rarely",score:0}]},
+
+{q:"Focus level?",a:[
+{text:"poor",score:2},
+{text:"okay",score:1},
+{text:"good",score:0}]},
+
+{q:"How often do you feel calm?",a:[
+{text:"rarely",score:2},
+{text:"sometimes",score:1},
+{text:"often",score:0}]},
+
+{q:"Do you enjoy your free time?",a:[
+{text:"not much",score:2},
+{text:"sometimes",score:1},
+{text:"yes",score:0}]},
+
+{q:"How do you feel right now?",a:[
+{text:"not great",score:2},
+{text:"meh",score:1},
+{text:"good",score:0}]},
+
+{q:"Do you feel connected to others?",a:[
+{text:"not really",score:2},
+{text:"somewhat",score:1},
+{text:"yes",score:0}]},
+
+{q:"Final question: are you happy?",a:[
+{text:"no",score:2},
+{text:"unsure",score:1},
+{text:"yes",score:0}]}
+]
+
+};
+
+let currentQuiz=null;
+let index=0;
 let score=0;
 
-// stats start 10k
-let totalUsers=10000 + Math.floor(Math.random()*200);
-let percent=50;
+function startQuiz(type){
+currentQuiz=quizzes[type];
+index=0;
+score=0;
 
-function updateStats(){
-    totalUsers += Math.floor(Math.random()*2);
-    document.getElementById("stats").innerHTML=
-        "🌍 "+totalUsers.toLocaleString()+" people took this quiz<br>"+
-        "🌈 "+percent+"% got certified";
+document.getElementById("menu").style.display="none";
+document.getElementById("backBtn").style.display="block";
+
+loadQuestion();
 }
-setInterval(updateStats,3000);
-updateStats();
 
 function loadQuestion(){
-    const quiz=document.getElementById("quiz");
-    const progress=document.getElementById("progress");
+let quiz=document.getElementById("quiz");
+let progress=document.getElementById("progress");
 
-    if(current>=questions.length){
-        showResult();
-        return;
-    }
+if(index>=currentQuiz.length){
+showResult();
+return;
+}
 
-    progress.innerHTML=`Question ${current+1} / ${questions.length}`;
+progress.innerHTML=`Question ${index+1}/${currentQuiz.length}`;
+quiz.innerHTML="<h2>"+currentQuiz[index].q+"</h2>";
 
-    quiz.classList.add("fade");
+currentQuiz[index].a.forEach(ans=>{
+let btn=document.createElement("button");
+btn.innerText=ans.text;
 
-    setTimeout(()=>{
-        let q=questions[current];
-        quiz.innerHTML="<h2>"+q.q+"</h2>";
+btn.onclick=()=>{
+quiz.innerHTML="<h3>analyzing...</h3>";
+setTimeout(()=>{
+score+=ans.score;
+index++;
+loadQuestion();
+},700);
+};
 
-        q.a.forEach(ans=>{
-            let btn=document.createElement("button");
-            btn.innerText=ans.text;
-
-            btn.onclick=()=>{
-                btn.classList.add("clicked");
-
-                setTimeout(()=>{
-                    quiz.innerHTML="<h3>🧠 analyzing your vibe...</h3>";
-                    setTimeout(()=>{
-                        score+=ans.score;
-                        current++;
-                        loadQuestion();
-                    },800);
-                },150);
-            };
-
-            quiz.appendChild(btn);
-        });
-
-        quiz.classList.remove("fade");
-    },300);
+quiz.appendChild(btn);
+});
 }
 
 function showResult(){
-    let quiz=document.getElementById("quiz");
-    let result=document.getElementById("result");
+let result=document.getElementById("result");
+let quiz=document.getElementById("quiz");
 
-    quiz.innerHTML="";
+quiz.innerHTML="";
 
-    let text="";
+let text="";
 
-    if(score>=30){
-        text="🌈 Certified Vibe Legend 🌈";
-        percent=Math.min(99,percent+1);
-    }else if(score>=18){
-        text="🤨 Suspiciously Stylish 🤨";
-    }else{
-        text="😎 Just Vibing 😎";
-    }
-
-    result.innerHTML=text+"<br><br><button onclick='location.reload()'>Retry</button>";
+if(score>currentQuiz.length*1.5){
+text="⚠️ you might need more rest & support";
+}else if(score>currentQuiz.length*0.8){
+text="🤔 mixed feelings detected";
+}else{
+text="😊 you seem pretty happy overall";
 }
 
-loadQuestion();
+result.innerHTML=text+"<br><br><button onclick='goHome()'>Back</button>";
+}
+
+function goHome(){
+document.getElementById("menu").style.display="block";
+document.getElementById("quiz").innerHTML="";
+document.getElementById("result").innerHTML="";
+document.getElementById("progress").innerHTML="";
+document.getElementById("backBtn").style.display="none";
+}
+
 </script>
 
 </body>
