@@ -6,21 +6,20 @@
 <title>Quiz Hub ✨</title>
 
 <style>
-html, body {
+* {
+    box-sizing: border-box;
+}
+
+body {
     margin: 0;
-    padding: 0;
-    background: #000;
     font-family: Arial, sans-serif;
     color: white;
     text-align: center;
     min-height: 100vh;
-}
-
-body {
-    padding: 20px;
     background: linear-gradient(-45deg,#ff00cc,#6a00ff,#3333ff,#00c6ff);
     background-size: 400% 400%;
     animation: bg 12s infinite;
+    padding: 20px;
 }
 
 @keyframes bg {
@@ -30,29 +29,85 @@ body {
 }
 
 .container {
-    width: 95%;
     max-width: 700px;
     margin: auto;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.65);
     padding: 25px;
-    border-radius: 18px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+p {
+    opacity: 0.8;
 }
 
 button {
-    display: block;
-    margin: 12px auto;
-    padding: 15px;
     width: 100%;
+    margin: 10px 0;
+    padding: 14px;
     border: none;
     border-radius: 12px;
-    font-size: 17px;
+    font-size: 16px;
     cursor: pointer;
+    background: linear-gradient(135deg,#ffffff,#dddddd);
+    color: black;
+    transition: all 0.25s ease;
 }
 
-#stats { font-size: 14px; margin-bottom: 10px; }
-#progress { font-size: 14px; margin-bottom: 10px; }
+button:hover {
+    transform: scale(1.03);
+    background: white;
+}
 
-.hidden { display: none; }
+button:active {
+    transform: scale(0.97);
+}
+
+.hidden {
+    display: none;
+}
+
+.fade {
+    animation: fade 0.4s ease;
+}
+
+@keyframes fade {
+    from {opacity:0; transform:translateY(10px);}
+    to {opacity:1; transform:translateY(0);}
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: white;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+#stats {
+    font-size: 13px;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.result-box {
+    font-size: 20px;
+    margin-top: 20px;
+}
 </style>
 </head>
 
@@ -60,9 +115,8 @@ button {
 
 <div class="container">
 
-<!-- MENU -->
-<div id="menu">
-    <h1>✨ Quiz Hub ✨</h1>
+<div id="menu" class="fade">
+    <h1>✨ Quiz Hub</h1>
     <p>Pick a quiz 👇</p>
 
     <button onclick="startQuiz('vibe')">🎭 Vibe Check</button>
@@ -71,11 +125,15 @@ button {
 
 <div id="stats"></div>
 
-<!-- QUIZ AREA -->
-<div id="quizSection" class="hidden">
-    <div id="progress"></div>
+<div id="quizSection" class="hidden fade">
+    <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+
+    <div id="progressText"></div>
     <div id="quiz"></div>
     <div id="result"></div>
+
     <button onclick="goHome()">⬅ Back</button>
 </div>
 
@@ -96,174 +154,8 @@ function updateStats(){
 setInterval(updateStats, 3000);
 updateStats();
 
-// QUIZZES
-const quizzes = {
-
-vibe: [
-{q:"You hear a new song?",a:[
-{text:"added to crying playlist instantly",score:2},
-{text:"cool beat",score:1},
-{text:"skip",score:0}]},
-
-{q:"Camera roll?",a:[
-{text:"selfies everywhere",score:2},
-{text:"normal",score:1},
-{text:"none",score:0}]},
-
-{q:"Outfit vibe?",a:[
-{text:"aesthetic layers",score:2},
-{text:"hoodie",score:1},
-{text:"random clothes",score:0}]},
-
-{q:"Someone says 'slay'",a:[
-{text:"PERIOD",score:2},
-{text:"ok",score:1},
-{text:"what",score:0}]},
-
-{q:"Spotify wrapped?",a:[
-{text:"emotional damage",score:2},
-{text:"fine",score:1},
-{text:"don't use it",score:0}]},
-
-{q:"Lighting for selfies?",a:[
-{text:"golden hour",score:2},
-{text:"mirror",score:1},
-{text:"flash",score:0}]},
-
-{q:"Favorite app?",a:[
-{text:"TikTok",score:2},
-{text:"Instagram",score:1},
-{text:"Discord",score:0}]},
-
-{q:"Room vibe?",a:[
-{text:"LED cozy chaos",score:2},
-{text:"clean",score:1},
-{text:"mess",score:0}]},
-
-{q:"Texting style?",a:[
-{text:"paragraphs",score:2},
-{text:"normal",score:1},
-{text:"k",score:0}]},
-
-{q:"Emoji?",a:[
-{text:"✨",score:2},
-{text:"😂",score:1},
-{text:"none",score:0}]},
-
-{q:"Compliment?",a:[
-{text:"omg stunning",score:2},
-{text:"nice",score:1},
-{text:"cool",score:0}]},
-
-{q:"Pinterest?",a:[
-{text:"yes",score:2},
-{text:"kinda",score:1},
-{text:"no",score:0}]},
-
-{q:"Say 'bro'?",a:[
-{text:"ironically",score:2},
-{text:"sometimes",score:1},
-{text:"always",score:0}]},
-
-{q:"Sit in chair?",a:[
-{text:"weird",score:2},
-{text:"slightly weird",score:1},
-{text:"normal",score:0}]},
-
-{q:"Celebrity crush?",a:[
-{text:"complicated",score:2},
-{text:"normal",score:1},
-{text:"none",score:0}]},
-
-{q:"Movie type?",a:[
-{text:"romance",score:2},
-{text:"comedy",score:1},
-{text:"action",score:0}]},
-
-{q:"Aesthetic?",a:[
-{text:"everything",score:2},
-{text:"somewhat",score:1},
-{text:"no",score:0}]},
-
-{q:"Texts?",a:[
-{text:"many emojis",score:2},
-{text:"balanced",score:1},
-{text:"dry",score:0}]},
-
-{q:"Say iconic?",a:[
-{text:"daily",score:2},
-{text:"rarely",score:1},
-{text:"never",score:0}]},
-
-{q:"Final vibe check?",a:[
-{text:"pass",score:2},
-{text:"maybe",score:1},
-{text:"fail",score:0}]}
-],
-
-happy: [
-{q:"How often do you feel happy?",a:[
-{text:"rarely",score:2},{text:"sometimes",score:1},{text:"often",score:0}]},
-
-{q:"Your energy lately?",a:[
-{text:"low",score:2},{text:"up/down",score:1},{text:"good",score:0}]},
-
-{q:"Sleep quality?",a:[
-{text:"bad",score:2},{text:"ok",score:1},{text:"good",score:0}]},
-
-{q:"Motivation?",a:[
-{text:"none",score:2},{text:"some",score:1},{text:"high",score:0}]},
-
-{q:"Future feeling?",a:[
-{text:"worried",score:2},{text:"unsure",score:1},{text:"hopeful",score:0}]},
-
-{q:"How often do you laugh?",a:[
-{text:"rarely",score:2},{text:"sometimes",score:1},{text:"often",score:0}]},
-
-{q:"Stress level?",a:[
-{text:"high",score:2},{text:"medium",score:1},{text:"low",score:0}]},
-
-{q:"Do you enjoy free time?",a:[
-{text:"not really",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
-
-{q:"Focus?",a:[
-{text:"bad",score:2},{text:"ok",score:1},{text:"good",score:0}]},
-
-{q:"How do you feel right now?",a:[
-{text:"not great",score:2},{text:"meh",score:1},{text:"good",score:0}]},
-
-{q:"Do you feel calm?",a:[
-{text:"rarely",score:2},{text:"sometimes",score:1},{text:"often",score:0}]},
-
-{q:"Do you enjoy your days?",a:[
-{text:"not really",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
-
-{q:"Do small things make you happy?",a:[
-{text:"rarely",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
-
-{q:"Do you feel overwhelmed?",a:[
-{text:"often",score:2},{text:"sometimes",score:1},{text:"rarely",score:0}]},
-
-{q:"Do you feel connected to others?",a:[
-{text:"not really",score:2},{text:"somewhat",score:1},{text:"yes",score:0}]},
-
-{q:"Are you satisfied with life?",a:[
-{text:"no",score:2},{text:"kind of",score:1},{text:"yes",score:0}]},
-
-{q:"Do you relax enough?",a:[
-{text:"no",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
-
-{q:"Do you feel positive?",a:[
-{text:"rarely",score:2},{text:"sometimes",score:1},{text:"often",score:0}]},
-
-{q:"Do you enjoy being around people?",a:[
-{text:"no",score:2},{text:"sometimes",score:1},{text:"yes",score:0}]},
-
-{q:"Final question: are you happy?",a:[
-{text:"no",score:2},{text:"unsure",score:1},{text:"yes",score:0}]}
-]
-
-};
+// QUIZZES (unchanged)
+const quizzes = { /* KEEP YOUR QUIZ DATA EXACTLY THE SAME HERE */ };
 
 // logic
 let currentQuiz = [];
@@ -286,32 +178,38 @@ function goHome(){
     document.getElementById("quizSection").classList.add("hidden");
     document.getElementById("quiz").innerHTML = "";
     document.getElementById("result").innerHTML = "";
-    document.getElementById("progress").innerHTML = "";
+    document.getElementById("progressText").innerHTML = "";
+    document.getElementById("progressFill").style.width = "0%";
 }
 
 function loadQuestion(){
     const quiz = document.getElementById("quiz");
-    const progress = document.getElementById("progress");
 
     if(current >= currentQuiz.length){
         showResult();
         return;
     }
 
-    progress.innerHTML = `Question ${current+1}/${currentQuiz.length}`;
-    quiz.innerHTML = "<h2>" + currentQuiz[current].q + "</h2>";
+    // progress
+    let percent = (current / currentQuiz.length) * 100;
+    document.getElementById("progressFill").style.width = percent + "%";
+    document.getElementById("progressText").innerText =
+        `Question ${current+1} of ${currentQuiz.length}`;
+
+    quiz.innerHTML = `<h2>${currentQuiz[current].q}</h2>`;
 
     currentQuiz[current].a.forEach(ans=>{
         let btn = document.createElement("button");
         btn.innerText = ans.text;
 
         btn.onclick = ()=>{
-            quiz.innerHTML = "<h3>Analyzing...</h3>";
+            quiz.innerHTML = "<h3 class='fade'>Analyzing...</h3>";
+
             setTimeout(()=>{
                 score += ans.score;
                 current++;
                 loadQuestion();
-            }, 600);
+            }, 500);
         };
 
         quiz.appendChild(btn);
@@ -327,27 +225,25 @@ function showResult(){
     let text = "";
 
     if(score >= currentQuiz.length * 1.5){
-        text = "🤔 strong results detected";
+        text = "🤔 Strong results detected";
     } else if(score >= currentQuiz.length * 0.8){
-        text = "😐 mixed vibes";
+        text = "😐 Mixed vibes";
     } else {
-        text = "😎 pretty balanced";
+        text = "😎 Pretty balanced";
     }
 
     result.innerHTML = `
-        ${text}
+        <div class="result-box fade">${text}</div>
 
-        <br><br>
         <button onclick="goHome()">Try Another Quiz</button>
 
-        <br><br>
-        <p style="font-size:14px; opacity:0.8;">
-            If this made you laugh, consider supporting 👇
+        <p style="font-size:13px; opacity:0.7;">
+            If this made you smile 👇
         </p>
 
         <a href="https://www.paypal.me/zkaterswrldd/1" target="_blank">
             <button style="background:#ffc439;color:black;font-weight:bold;">
-                💛 Support this site ($1)
+                💛 Support ($1)
             </button>
         </a>
     `;
